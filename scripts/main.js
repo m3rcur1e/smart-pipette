@@ -26,7 +26,7 @@ function extractorsFor(tile){
         }
         return out;
     }
-    if(wall != Blocks.air) return out;
+    if(!wall.alwaysReplace) return out;
 
     if(floor.allowCorePlacement){
         add(b => b instanceof CoreBlock && coreFits(b, tile));
@@ -55,7 +55,7 @@ function coreFits(block, tile){
                 for(let dy = 0; dy < s && ok; dy++){
                     let t = Vars.world.tile(x0 + dx, y0 + dy);
                     ok = t != null && t.floor().allowCorePlacement && !(t.block() instanceof CoreBlock) &&
-                        !(t.block() != Blocks.air && t.block().isStatic());
+                        (t.build != null || t.block().alwaysReplace);
                 }
             }
             if(ok) return true;
